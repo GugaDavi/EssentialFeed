@@ -10,7 +10,7 @@ import Foundation
 public typealias HTTPClientResponse = (HTTPClientResult) -> Void
 
 public enum HTTPClientResult {
-	case success(HTTPURLResponse)
+	case success(Data, HTTPURLResponse)
 	case failure(Error)
 }
 
