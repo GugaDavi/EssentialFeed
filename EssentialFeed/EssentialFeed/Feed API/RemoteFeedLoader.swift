@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 public final class RemoteFeedLoader {
 	private let url: URL
 	private let client: HTTPClient
@@ -44,33 +42,3 @@ public final class RemoteFeedLoader {
 		}
 	}
 }
-
-private class FeedItemsMapper {
-	private struct Root: Decodable {
-		let items: [Item]
-	}
-
-	private struct Item: Decodable {
-		public let id: UUID
-		public let description: String?
-		public let location: String?
-		public let image: URL
-		
-		var item: FeedItem {
-			return FeedItem(id: id, imageURL: image, description: description, location: location)
-		}
-	}
-
-	static var OK_200: Int { return 200 }
-	
-	static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [FeedItem] {
-		guard response.statusCode == OK_200 else {
-			throw RemoteFeedLoader.Error.invalidData
-		}
-		
-		let root = try JSONDecoder().decode(Root.self, from: data)
-		
-		return root.items.map { $0.item }
-	}
-}
-
