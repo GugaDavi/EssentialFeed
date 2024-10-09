@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-and-test:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Select XCode
+      run: sudo xcode-select -switch /Applications/
+
+    - name: Build and test
+      run: xcodebuild clean build test -project EssentialFeed/EssentialFeed.xcodeproj -scheme "CI"
