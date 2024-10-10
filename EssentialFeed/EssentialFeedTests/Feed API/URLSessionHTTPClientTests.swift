@@ -28,11 +28,9 @@ final class URLSessionHTTPClientTests: XCTestCase {
 		URLProtocolStub.observeRequests { request in
 			XCTAssertEqual(request.url, url)
 			XCTAssertEqual(request.httpMethod, "GET")
-			
-			expectation.fulfill()
 		}
 		
-		makeSUT().get(from: url) { _ in }
+		makeSUT().get(from: url) { _ in expectation.fulfill() }
 		
 		wait(for: [expectation], timeout: 1)
 	}
