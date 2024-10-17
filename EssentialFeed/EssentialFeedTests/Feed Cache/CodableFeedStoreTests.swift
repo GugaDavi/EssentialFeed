@@ -199,57 +199,6 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
 	
 	//MARK: - Helpers
 	
-	private func expect(_ sut: FeedStore, toRetrieveTwice expectedResult: RetrievalcachedFeedResult, file: StaticString = #filePath, line: UInt = #line) {
-		expect(sut, toRetrieve: expectedResult, file: file, line: line)
-		expect(sut, toRetrieve: expectedResult, file: file, line: line)
-	}
-	
-	private func expect(_ sut: FeedStore, toRetrieve expectedResult: RetrievalcachedFeedResult, file: StaticString = #filePath, line: UInt = #line) {
-		let exp = expectation(description: "Wait for cache retrieval")
-		
-		sut.retrieve { retrievedResult in
-			switch (expectedResult, retrievedResult) {
-			case (.empty, .empty), (.failure, .failure):
-				break
-			case let (.found(expectedFeed, expectedTimestamp), .found(retrievedFeed, retrievedTimestamp)):
-				XCTAssertEqual(expectedFeed, retrievedFeed)
-				XCTAssertEqual(expectedTimestamp, retrievedTimestamp)
-			default:
-				XCTFail("Expected to retreive \(expectedResult), got \(retrievedResult) instead")
-			}
-			
-			exp.fulfill()
-		}
-		
-		wait(for: [exp], timeout: 1)
-	}
-	
-	@discardableResult
-	private func deleteCache(from sut: FeedStore) -> Error? {
-		let exp = expectation(description: "Wait for cache deletion")
-		var deletionError: Error? = nil
-		sut.deleteCachedFeed { error in
-			deletionError = error
-			exp.fulfill()
-		}
-		wait(for: [exp], timeout: 1)
-		return deletionError
-	}
-	
-	@discardableResult
-	private func insert(_ cache: (feed: [LocalFeedImage], timestamp: Date), to sut: FeedStore) -> Error? {
-		let exp = expectation(description: "Wait for cache insertion")
-		
-		var receivedError: Error? = nil
-		sut.insert(cache.feed, timestamp: cache.timestamp) { insertionError in
-			receivedError = insertionError
-			exp.fulfill()
-		}
-		
-		wait(for: [exp], timeout: 1)
-		return receivedError
-	}
-	
 	private func makeSUT(storeURL: URL? = nil, file: StaticString = #filePath, line: UInt = #line) -> FeedStore {
 		let sut = CodableFeedStore(storeURL: storeURL ?? testSpecificStoreURL())
 		trackForMemoryLeaks(sut, file: file, line: line)
