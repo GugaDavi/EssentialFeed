@@ -94,6 +94,7 @@ final class CodableFeedStoreTests: XCTestCase {
 		let insertionError = insert((feed, timestamp), to: sut)
 		
 		XCTAssertNotNil(insertionError)
+		expect(sut, toRetrieve: .empty)
 	}
 	
 	func test_delete_hasNoSideEffectsOnEmptyCache() {
