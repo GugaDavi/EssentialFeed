@@ -143,7 +143,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
 	}
 	
 	@discardableResult
-	func deleteCache(from sut: FeedStore) -> Error? {
+	func deleteCache(from sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) -> Error? {
 		let exp = expectation(description: "Wait for cache deletion")
 		var deletionError: Error? = nil
 		sut.deleteCachedFeed { error in
