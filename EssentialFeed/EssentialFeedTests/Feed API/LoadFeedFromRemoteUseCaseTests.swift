@@ -132,17 +132,17 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 		imageURL: URL,
 		description: String? = nil,
 		location: String? = nil
-	) -> (model: FeedItem, json: [String: Any]) {
-		let item = FeedItem(
+	) -> (model: FeedImage, json: [String: Any]) {
+		let item = FeedImage(
 			id: id,
-			imageURL: imageURL,
+			url: imageURL,
 			description: description,
 			location: location
 		)
 		
 		let json = [
 			"id": item.id.uuidString,
-			"image": item.imageURL.absoluteString,
+			"image": item.url.absoluteString,
 			"description": item.description,
 			"location": item.location
 		].reduce(into: [String: Any]()) { acc, e in
